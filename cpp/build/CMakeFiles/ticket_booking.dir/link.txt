@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -Wall -Wextra -pedantic -shared -Wl,-soname,libticket_booking.so -o libticket_booking.so CMakeFiles/ticket_booking.dir/src/ticket_booking.cpp.o

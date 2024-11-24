@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -Wextra -pedantic CMakeFiles/test_graph.dir/tests/test_graph.cpp.o -o test_graph  -Wl,-rpath,"/mnt/sdb1/lancers/travel management app/cpp/build" libticket_booking.so

@@ -1,0 +1,8 @@
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/ticket_booking.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/cpp_backend.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/test_avl_tree.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/test_priority_queue.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/test_graph.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/test_hashmaps_and_binary_search.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/edit_cache.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/CMakeFiles/rebuild_cache.dir

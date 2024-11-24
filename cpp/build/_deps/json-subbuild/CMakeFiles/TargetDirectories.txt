@@ -1,0 +1,3 @@
+/mnt/sdb1/lancers/travel management app/cpp/build/_deps/json-subbuild/CMakeFiles/json-populate.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/_deps/json-subbuild/CMakeFiles/edit_cache.dir
+/mnt/sdb1/lancers/travel management app/cpp/build/_deps/json-subbuild/CMakeFiles/rebuild_cache.dir

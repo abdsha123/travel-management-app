@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -Wextra -pedantic CMakeFiles/test_avl_tree.dir/tests/test_avl_tree.cpp.o -o test_avl_tree  -Wl,-rpath,"/mnt/sdb1/lancers/travel management app/cpp/build" libticket_booking.so
