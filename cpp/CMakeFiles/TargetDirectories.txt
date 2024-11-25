@@ -1,0 +1,8 @@
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/ticket_booking.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/cpp_backend.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/test_avl_tree.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/test_priority_queue.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/test_graph.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/test_hashmaps_and_binary_search.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/ALL_BUILD.dir
+C:/Users/abdul/Downloads/travel management app/cpp/CMakeFiles/ZERO_CHECK.dir

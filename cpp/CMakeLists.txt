@@ -8,6 +8,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Include the src directory for header files
 include_directories(${PROJECT_SOURCE_DIR}/src)
 
+# Set the default build type if not specified
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the build type" FORCE)
+endif()
+
+# Adjust library suffix and prefix for Windows
+if(WIN32)
+    set(CMAKE_SHARED_LIBRARY_PREFIX "")
+    set(CMAKE_SHARED_LIBRARY_SUFFIX ".pyd") # Python modules on Windows
+    add_definitions(-DPLATFORM_WINDOWS) # Add platform-specific definitions if needed
+endif()
+
 # Find pybind11
 find_package(pybind11 REQUIRED)
 
@@ -22,12 +34,20 @@ set(SOURCES
     src/ticket_booking.cpp
 )
 
-# Create the shared library with ticket_booking.cpp
-add_library(ticket_booking SHARED ${SOURCES})
+
+add_library(ticket_booking STATIC ${SOURCES})
 
 # Build the Python bindings
 add_library(cpp_backend MODULE src/bindings.cpp)
-set_target_properties(cpp_backend PROPERTIES PREFIX "" SUFFIX ".so")
+
+# Set suffix and prefix for compatibility
+if(WIN32)
+    set_target_properties(cpp_backend PROPERTIES PREFIX "" SUFFIX ".pyd")
+else()
+    set_target_properties(cpp_backend PROPERTIES PREFIX "" SUFFIX ".so")
+endif()
+
+# Link libraries
 target_link_libraries(cpp_backend PRIVATE pybind11::module)
 
 # Set the output directory for shared libraries
@@ -47,5 +67,9 @@ target_link_libraries(test_graph ticket_booking)
 add_executable(test_hashmaps_and_binary_search tests/test_hashmaps_and_binary_search.cpp)
 target_link_libraries(test_hashmaps_and_binary_search ticket_booking)
 
-# Enable additional compiler warnings
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+# Enable additional compiler warnings based on the compiler
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4") # Equivalent warning level for MSVC
+endif()
