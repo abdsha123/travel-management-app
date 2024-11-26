@@ -2,6 +2,8 @@ To run the backend
 
 navigate to the backend folder
 in backend folder open terminal and install packages type pip install fastapi uvicorn pydantic
+
+set path using the command $env:PYTHONPATH="<path to build folder>;$env:PYTHONPATH"
 next, launch the backend server using the following command while in the backend folder:
 uvicorn app.main:app --reload
 
