@@ -5,6 +5,7 @@ from app.services.priorityqueue_service import (
     process_request,
     get_request_count,
     is_queue_empty,
+    get_all_requests,
 )
 
 router = APIRouter()
@@ -15,24 +16,27 @@ class AddRequest(BaseModel):
 
 @router.post("/add")
 async def add(request: AddRequest):
-    # Await the service function to resolve any coroutine
     result = await add_request(request.seat_id, request.priority)
     return {"success": True, "message": "Request added successfully!", "result": result}
 
 @router.post("/process")
 async def process():
-    # Await the service function to resolve any coroutine
     result = await process_request()
+    if not result["success"]:
+        return {"success": False, "error": result["error"]}
     return {"success": True, "processed_request": result}
 
 @router.get("/count")
 async def count():
-    # Await the service function to resolve any coroutine
     result = await get_request_count()
     return {"success": True, "request_count": result}
 
 @router.get("/empty")
-async def is_empty():
-    # Await the service function to resolve any coroutine
+async def empty():
     result = await is_queue_empty()
     return {"success": True, "is_empty": result}
+
+@router.get("/all")
+async def all_requests():
+    result = await get_all_requests()
+    return result

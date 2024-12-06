@@ -17,30 +17,25 @@ class SeatRequest(BaseModel):
 
 @router.post("/insert")
 async def insert(seat: SeatRequest):
-    # Await the async service function to resolve the coroutine
     result = await insert_seat(seat.seat_id, seat.is_available, seat.seat_type)
     return result
 
 @router.delete("/remove")
 async def remove(seat: SeatRequest):
-    # Await the async service function to resolve the coroutine
     result = await remove_seat(seat.seat_id, seat.is_available, seat.seat_type)
     return result
 
 @router.post("/book")
 async def book(seat_id: int):
-    # Await the async service function to resolve the coroutine
     result = await book_seat(seat_id)
     return result
 
 @router.post("/cancel")
 async def cancel(seat_id: int):
-    # Await the async service function to resolve the coroutine
     result = await cancel_seat(seat_id)
     return result
 
 @router.get("/nearest")
 async def find_nearest(seat_id: int):
-    # Await the async service function to resolve the coroutine
     result = await find_nearest_seat(seat_id)
     return result

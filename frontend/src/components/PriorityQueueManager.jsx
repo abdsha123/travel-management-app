@@ -4,6 +4,7 @@ import {
   processRequest,
   getRequestCount,
   isQueueEmpty,
+  getAllRequests,
 } from "../services/priorityQueueService";
 
 const PriorityQueueManager = () => {
@@ -11,10 +12,15 @@ const PriorityQueueManager = () => {
   const [priority, setPriority] = useState("");
   const [requestCount, setRequestCount] = useState(null);
   const [queueEmpty, setQueueEmpty] = useState(null);
+  const [allRequests, setAllRequests] = useState([]);
   const [message, setMessage] = useState("");
 
   const handleAddRequest = async () => {
     try {
+      if (!seatId || !priority) {
+        setMessage("Please provide both Seat ID and Priority.");
+        return;
+      }
       const resultMessage = await addRequest(
         parseInt(seatId),
         parseInt(priority),
@@ -23,7 +29,7 @@ const PriorityQueueManager = () => {
       setSeatId("");
       setPriority("");
     } catch (error) {
-      setMessage("Error adding request: " + error.message);
+      setMessage(error.message);
     }
   };
 
@@ -31,20 +37,22 @@ const PriorityQueueManager = () => {
     try {
       const processedRequest = await processRequest();
       setMessage(
-        `Processed Request - Seat ID: ${processedRequest.seat_id}, Priority: ${processedRequest.priority}`,
+        `Processed Request - Seat ID: ${processedRequest.seatID}, Priority: ${processedRequest.priority}`,
       );
     } catch (error) {
-      setMessage("Error processing request: " + error.message);
+      setMessage(error.message);
     }
   };
 
   const handleGetRequestCount = async () => {
     try {
-      const response = await getRequestCount();
-      setRequestCount(response); // Store the entire response object
+      const count = await getRequestCount();
+      setRequestCount(count);
+      // If you want a success message:
+      // setMessage("Request count retrieved successfully!");
       setMessage("");
     } catch (error) {
-      setMessage("Error fetching request count: " + error.message);
+      setMessage(error.message);
       setRequestCount(null);
     }
   };
@@ -53,9 +61,21 @@ const PriorityQueueManager = () => {
     try {
       const empty = await isQueueEmpty();
       setQueueEmpty(empty);
+      // If you want a success message:
+      // setMessage("Queue empty state retrieved successfully!");
       setMessage("");
     } catch (error) {
-      setMessage("Error checking if queue is empty: " + error.message);
+      setMessage(error.message);
+    }
+  };
+
+  const handleGetAllRequests = async () => {
+    try {
+      const requests = await getAllRequests();
+      setAllRequests(requests);
+      setMessage("");
+    } catch (error) {
+      setMessage(error.message);
     }
   };
 
@@ -118,8 +138,7 @@ const PriorityQueueManager = () => {
             </button>
             {requestCount !== null && (
               <div className="alert alert-warning mt-2 text-center">
-                Request Count: {requestCount.count}{" "}
-                {/* Access `count` explicitly */}
+                Request Count: {requestCount}
               </div>
             )}
             <button onClick={handleIsQueueEmpty} className="btn btn-secondary">
@@ -128,6 +147,24 @@ const PriorityQueueManager = () => {
             {queueEmpty !== null && (
               <div className="alert alert-warning mt-2 text-center">
                 Queue is {queueEmpty ? "Empty" : "Not Empty"}
+              </div>
+            )}
+            <button
+              onClick={handleGetAllRequests}
+              className="btn btn-info mt-3"
+            >
+              Get All Requests
+            </button>
+            {allRequests.length > 0 && (
+              <div className="alert alert-light mt-3">
+                <h5>All Requests:</h5>
+                <ul className="list-group">
+                  {allRequests.map((req, index) => (
+                    <li key={index} className="list-group-item">
+                      SeatID: {req.seatID}, Priority: {req.priority}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>

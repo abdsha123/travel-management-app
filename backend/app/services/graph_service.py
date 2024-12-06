@@ -1,3 +1,4 @@
+# graph_service.py
 from cpp_backend import Graph
 import asyncio
 
@@ -18,13 +19,30 @@ async def add_route(city1: str, city2: str, weight: int):
 async def find_shortest_path(start_city: str, end_city: str):
     async with lock:
         result = graph.findShortestPath(start_city, end_city)
-    if result[0] == -1:
+    if result.first == -1:
         return {"success": False, "error": "No path found"}
-    return {"success": True, "path": result[1], "cost": result[0]}
+    return {"success": True, "path": result.second, "cost": result.first}
 
 async def print_graph():
     async with lock:
-        graph_data = []
-        graph.printGraph(lambda city, destination, weight: graph_data.append(
-            {"city": city, "destination": destination, "weight": weight}))
-    return {"success": True, "graph": graph_data}
+        try:
+            adjacency_list = graph.getAdjacencyList()
+            graph_data = []
+            for city, edges in adjacency_list.items():
+                for edge in edges:
+                    graph_data.append({
+                        "city": city,
+                        "destination": edge.destination,
+                        "weight": edge.weight
+                    })
+            return {"success": True, "graph": graph_data}
+        except Exception as e:
+            return {"success": False, "error": f"Failed to retrieve graph data: {str(e)}"}
+
+async def get_all_cities():
+    async with lock:
+        try:
+            cities = graph.getAllCities()
+            return {"success": True, "cities": cities}
+        except Exception as e:
+            return {"success": False, "error": f"Failed to retrieve cities: {str(e)}"}

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\ticket_booking.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\AVLTree.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\PriorityQueue.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\Graph.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\SeatHashMap.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\UserProfileManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\src\BinarySearchUtil.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\abdul\Downloads\dsa\travel management app\cpp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{05A8AB5B-D8AF-3A30-8C77-AAE8904C665D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{899411E0-DD88-3411-900E-A474AE487948}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

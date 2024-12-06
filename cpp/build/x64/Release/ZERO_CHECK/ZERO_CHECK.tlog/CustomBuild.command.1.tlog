@@ -1,0 +1,10 @@
+^C:\USERS\ABDUL\DOWNLOADS\DSA\TRAVEL MANAGEMENT APP\CPP\BUILD\CMAKEFILES\4CDD4E4E8FE13BF4FB067182CB7E1C8D\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/abdul/Downloads/dsa/travel management app/cpp" "-BC:/Users/abdul/Downloads/dsa/travel management app/cpp/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/abdul/Downloads/dsa/travel management app/cpp/build/TicketBookingSystem.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

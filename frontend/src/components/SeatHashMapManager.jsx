@@ -9,7 +9,7 @@ import {
 
 const SeatHashMapManager = () => {
   const [seatId, setSeatId] = useState("");
-  const [isAvailable, setIsAvailable] = useState(true);
+  const [isAvailable, setIsAvailable] = useState("true"); // Default dropdown value
   const [seatType, setSeatType] = useState("");
   const [seatInfo, setSeatInfo] = useState(null);
   const [allSeats, setAllSeats] = useState([]);
@@ -21,13 +21,21 @@ const SeatHashMapManager = () => {
       return;
     }
     try {
-      const result = await addSeat(parseInt(seatId), isAvailable, seatType);
-      setMessage(result.message);
+      const result = await addSeat(
+        parseInt(seatId),
+        isAvailable === "true",
+        seatType,
+      );
+      if (result.error) {
+        setMessage(result.error);
+      } else {
+        setMessage(result.message);
+      }
       setSeatId("");
-      setIsAvailable(true);
+      setIsAvailable("true");
       setSeatType("");
     } catch (error) {
-      setMessage("Error adding seat: " + error.message);
+      setMessage(`Error adding seat: ${error.message}`);
     }
   };
 
@@ -41,9 +49,9 @@ const SeatHashMapManager = () => {
       setMessage(
         `Seat is ${result.available ? "available" : "not available"}.`,
       );
-      setSeatInfo(null); // Clear seatInfo if this action is unrelated
+      setSeatInfo(null); // Clear seatInfo if unrelated
     } catch (error) {
-      setMessage("Error checking availability: " + error.message);
+      setMessage(`Error checking availability: ${error.message}`);
     }
   };
 
@@ -55,11 +63,11 @@ const SeatHashMapManager = () => {
     try {
       const result = await updateSeatAvailability(
         parseInt(seatId),
-        isAvailable,
+        isAvailable === "true",
       );
       setMessage(result.message);
     } catch (error) {
-      setMessage("Error updating availability: " + error.message);
+      setMessage(`Error updating availability: ${error.message}`);
     }
   };
 
@@ -78,23 +86,23 @@ const SeatHashMapManager = () => {
         setSeatInfo(null);
       }
     } catch (error) {
-      setMessage("Error fetching seat info: " + error.message);
+      setMessage(`Error fetching seat info: ${error.message}`);
     }
   };
 
   const handleGetAllSeats = async () => {
     try {
       const result = await getAllSeats();
-      console.log("API Response for all seats:", result); // Debugging log
+      // result is {success: boolean, seats: [...]}
       if (result.success && Array.isArray(result.seats)) {
         setAllSeats(result.seats);
         setMessage("");
       } else {
-        setMessage("Error fetching all seats or no seats available.");
-        setAllSeats([]); // Clear seats if response is empty
+        setMessage("No seats available or error fetching seat data.");
+        setAllSeats([]);
       }
     } catch (error) {
-      setMessage("Error fetching all seats: " + error.message);
+      setMessage(`Error fetching all seats: ${error.message}`);
       setAllSeats([]);
     }
   };
@@ -129,7 +137,7 @@ const SeatHashMapManager = () => {
             <select
               id="isAvailable"
               value={isAvailable}
-              onChange={(e) => setIsAvailable(e.target.value === "true")}
+              onChange={(e) => setIsAvailable(e.target.value)}
               className="form-select"
             >
               <option value="true">True</option>
@@ -146,7 +154,7 @@ const SeatHashMapManager = () => {
               value={seatType}
               onChange={(e) => setSeatType(e.target.value)}
               className="form-control"
-              placeholder="Enter seat type"
+              placeholder="Enter seat type (e.g., Regular, VIP)"
             />
           </div>
           <div className="d-flex flex-wrap gap-2 mb-4">

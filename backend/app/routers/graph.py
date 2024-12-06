@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+# graph.py
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from app.services.graph_service import add_city, add_route, find_shortest_path, print_graph
+from app.services.graph_service import add_city, add_route, find_shortest_path, print_graph, get_all_cities
 
 router = APIRouter()
 
@@ -44,9 +45,25 @@ async def shortest_path_endpoint(start_city: str, end_city: str):
         return {
             "success": False,
             "message": f"No path found from '{start_city}' to '{end_city}'",
+            "error": result["error"],
         }
 
-@router.get("/")
+@router.get("/graph")
 async def graph_endpoint():
     result = await print_graph()  # Await the async function
-    return result  # Already returns a well-structured response
+    if not result["success"]:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return {
+        "success": True,
+        "graph": result["graph"]
+    }
+
+@router.get("/cities")
+async def get_cities_endpoint():
+    result = await get_all_cities()  # Await the async function
+    if not result["success"]:
+        raise HTTPException(status_code=500, detail=result["error"])
+    return {
+        "success": True,
+        "cities": result["cities"]
+    }

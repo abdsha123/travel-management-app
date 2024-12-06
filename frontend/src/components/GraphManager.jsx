@@ -13,12 +13,17 @@ const GraphManager = () => {
       setMessage(resultMessage); // Display success message from backend
       setCityName("");
     } catch (error) {
-      setMessage("Error adding city: " + error.message);
+      setMessage(`Error adding city: ${error.message}`);
     }
   };
 
   const handleAddRoute = async () => {
     try {
+      if (!route.city1 || !route.city2 || !route.weight) {
+        setMessage("Please provide valid route details.");
+        return;
+      }
+
       const resultMessage = await addRoute(
         route.city1,
         route.city2,
@@ -27,17 +32,22 @@ const GraphManager = () => {
       setMessage(resultMessage); // Display success message from backend
       setRoute({ city1: "", city2: "", weight: "" });
     } catch (error) {
-      setMessage("Error adding route: " + error.message);
+      setMessage(`Error adding route: ${error.message}`);
     }
   };
 
   const handleFindShortestPath = async () => {
     try {
+      if (!route.city1 || !route.city2) {
+        setMessage("Please provide both city names for the path search.");
+        return;
+      }
+
       const result = await findShortestPath(route.city1, route.city2);
       setShortestPath(result); // Save the path and cost details
       setMessage("");
     } catch (error) {
-      setMessage("Error finding shortest path: " + error.message);
+      setMessage(`Error finding shortest path: ${error.message}`);
       setShortestPath(null); // Clear any previous path details
     }
   };

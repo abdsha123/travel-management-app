@@ -71,8 +71,11 @@ private:
             node->left = insert(node->left, data);
         else if (data > node->data)
             node->right = insert(node->right, data);
-        else
+        else {
+            // Seat already exists
+            cerr << "Seat already exists\n";
             return node;
+        }
 
         node->height = 1 + max(height(node->left), height(node->right));
         int balance = balanceFactor(node);

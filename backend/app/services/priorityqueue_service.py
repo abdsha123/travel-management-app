@@ -1,5 +1,7 @@
 from cpp_backend import PriorityQueue, BookingRequest
 import asyncio
+from contextlib import redirect_stdout
+import io
 
 # Singleton instance of PriorityQueue
 priority_queue = PriorityQueue()
@@ -26,3 +28,25 @@ async def is_queue_empty():
     async with lock:
         empty = priority_queue.isEmpty()
     return {"success": True, "empty": empty}
+
+async def get_all_requests():
+    async with lock:
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            priority_queue.printAllRequests()
+        output = buffer.getvalue()
+
+        requests = []
+        for line in output.splitlines():
+            if line.strip():
+                # Output format:
+                # "SeatID: X, Priority: Y, Timestamp: Zms since epoch"
+                try:
+                    parts = line.split(", ")
+                    seatID = int(parts[0].split(": ")[1])
+                    priority = int(parts[1].split(": ")[1])
+                    # Timestamp not particularly needed for now
+                    requests.append({"seatID": seatID, "priority": priority})
+                except Exception as e:
+                    pass
+    return {"success": True, "requests": requests}

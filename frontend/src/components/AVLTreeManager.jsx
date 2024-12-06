@@ -8,51 +8,82 @@ import {
 
 const AVLTreeManager = () => {
   const [seatId, setSeatId] = useState("");
-  const [isAvailable, setIsAvailable] = useState(true);
+  const [isAvailable, setIsAvailable] = useState("true");
   const [seatType, setSeatType] = useState("");
   const [nearestSeat, setNearestSeat] = useState(null);
   const [message, setMessage] = useState("");
 
   const handleInsertSeat = async () => {
+    if (!seatId || !seatType) {
+      setMessage("Please provide both Seat ID and Seat Type.");
+      return;
+    }
     try {
-      await insertSeat(parseInt(seatId), isAvailable, seatType);
-      setMessage("Seat inserted successfully!");
+      const result = await insertSeat(
+        parseInt(seatId),
+        isAvailable === "true",
+        seatType,
+      );
+      // Now handle it like the SeatHashMap logic:
+      if (result.error) {
+        // Backend returned success: false, error: "Seat already exists"
+        setMessage(result.error);
+      } else {
+        // Backend returned success: true, message: "Seat inserted successfully!"
+        setMessage(result.message);
+      }
+      setSeatId("");
+      setIsAvailable("true");
+      setSeatType("");
     } catch (error) {
-      setMessage("Error inserting seat: " + error.message);
+      // If we actually hit a network error or something unexpected
+      setMessage(`Error inserting seat: ${error.message}`);
     }
   };
 
   const handleBookSeat = async () => {
     try {
-      await bookSeat(parseInt(seatId));
-      setMessage("Seat booked successfully!");
+      const result = await bookSeat(parseInt(seatId));
+      if (result.error) {
+        setMessage(result.error);
+      } else {
+        setMessage("Seat booked successfully!");
+      }
     } catch (error) {
-      setMessage("Error booking seat: " + error.message);
+      setMessage(`Error booking seat: ${error.message}`);
     }
   };
 
   const handleCancelSeat = async () => {
     try {
-      await cancelSeat(parseInt(seatId));
-      setMessage("Seat canceled successfully!");
+      const result = await cancelSeat(parseInt(seatId));
+      if (result.error) {
+        setMessage(result.error);
+      } else {
+        setMessage("Seat canceled successfully!");
+      }
     } catch (error) {
-      setMessage("Error canceling seat: " + error.message);
+      setMessage(`Error canceling seat: ${error.message}`);
     }
   };
 
   const handleFindNearestSeat = async () => {
     try {
       const result = await findNearestAvailableSeat(parseInt(seatId));
-      if (result && result.seatID) {
-        setNearestSeat(result); // Set the full result object to `nearestSeat`
+      if (result.success === false && result.error) {
+        // If nearest seat was not found or some other error from backend
+        setNearestSeat(null);
+        setMessage(result.error);
+      } else if (result?.seatID) {
+        setNearestSeat(result);
         setMessage("");
       } else {
-        setMessage("No nearest seat found!");
         setNearestSeat(null);
+        setMessage("No nearest seat found!");
       }
     } catch (error) {
-      setMessage("Error finding nearest seat: " + error.message);
       setNearestSeat(null);
+      setMessage(`Error finding nearest seat: ${error.message}`);
     }
   };
 
@@ -86,7 +117,7 @@ const AVLTreeManager = () => {
             <select
               id="isAvailable"
               value={isAvailable}
-              onChange={(e) => setIsAvailable(e.target.value === "true")}
+              onChange={(e) => setIsAvailable(e.target.value)}
               className="form-select"
             >
               <option value="true">True</option>
@@ -126,8 +157,11 @@ const AVLTreeManager = () => {
             </button>
             {nearestSeat && (
               <div className="mt-3 alert alert-warning">
-                <strong>Nearest Available Seat ID:</strong> {nearestSeat.seatID}{" "}
-                {/* Updated to use seatID */}
+                <strong>Nearest Available Seat:</strong> {nearestSeat.seatID}{" "}
+                <br />
+                <strong>Type:</strong> {nearestSeat.seatType} <br />
+                <strong>Available:</strong>{" "}
+                {nearestSeat.isAvailable ? "Yes" : "No"}
               </div>
             )}
           </div>

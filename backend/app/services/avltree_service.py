@@ -1,4 +1,3 @@
-
 from cpp_backend import AVLTree, Seat
 import asyncio
 
@@ -8,6 +7,10 @@ lock = asyncio.Lock()
 
 async def insert_seat(seat_id: int, is_available: bool, seat_type: str):
     async with lock:
+        # Check if seat already exists before inserting
+        # Use the AVLTree search method
+        if avl_tree.search(seat_id):
+            return {"success": False, "error": "Seat already exists"}
         seat = Seat(seat_id, is_available, seat_type)
         avl_tree.insert(seat)
     return {"success": True}

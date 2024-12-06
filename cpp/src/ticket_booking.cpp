@@ -6,7 +6,8 @@
 #include <iostream>
 #include <string>
 
-AVLTree<Seat> seatTree;
+// Specify the type for AVLTree<Seat>
+AVLTree<Seat> seatTree;  // Use AVLTree with the Seat type
 UserProfileManager userManager;
 SeatHashMap seatMap;
 
@@ -51,14 +52,28 @@ CSeatInfo get_seat(int seat_id) {
 }
 
 bool book_seat(int seat_id) {
+    if (!seatTree.search(seat_id)) {
+        std::cerr << "Error: Seat with ID " << seat_id << " does not exist.\n";
+        return false;
+    }
     return seatTree.bookSeat(seat_id);
 }
 
 bool cancel_seat(int seat_id) {
+    if (!seatTree.search(seat_id)) {
+        std::cerr << "Error: Seat with ID " << seat_id << " does not exist.\n";
+        return false;
+    }
     return seatTree.cancelSeat(seat_id);
 }
 
 CBookingRecord* get_user_bookings(int user_id, int* count) {
+    if (!userManager.hasBookings(user_id)) {
+        std::cerr << "Error: User with ID " << user_id << " has no bookings.\n";
+        *count = 0;
+        return nullptr;
+    }
+
     std::vector<BookingRecord> bookings = userManager.getBookingHistory(user_id);
     *count = bookings.size();
 

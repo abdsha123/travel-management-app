@@ -9,13 +9,13 @@ export const addBooking = async (userId, seatId, travelDate, seatType) => {
       travel_date: travelDate,
       seat_type: seatType,
     });
-    return response.data; // Expected to include { success: true, message: "..."}
+    return response.data;
   } catch (error) {
-    // Catch HTTP or network errors
-    throw new Error(
+    const errMsg =
+      error.response?.data?.error ||
       error.response?.data?.detail ||
-        "Failed to add booking. Please try again.",
-    );
+      "Failed to add booking. Please try again.";
+    throw new Error(errMsg);
   }
 };
 
@@ -25,13 +25,13 @@ export const getBookingHistory = async (userId) => {
     const response = await apiClient.get("/userprofile/history", {
       params: { user_id: userId },
     });
-    return response.data; // Expected to include { success: true, history: [...] }
+    return response.data;
   } catch (error) {
-    // Catch HTTP or network errors
-    throw new Error(
+    const errMsg =
+      error.response?.data?.error ||
       error.response?.data?.detail ||
-        "Failed to retrieve booking history. Please try again.",
-    );
+      "Failed to retrieve booking history. Please try again.";
+    throw new Error(errMsg);
   }
 };
 
@@ -41,12 +41,31 @@ export const hasBookings = async (userId) => {
     const response = await apiClient.get("/userprofile/hasbookings", {
       params: { user_id: userId },
     });
-    return response.data; // Expected to include { success: true, hasBookings: true/false }
+    return response.data;
   } catch (error) {
-    // Catch HTTP or network errors
-    throw new Error(
+    const errMsg =
+      error.response?.data?.error ||
       error.response?.data?.detail ||
-        "Failed to check bookings. Please try again.",
-    );
+      "Failed to check bookings. Please try again.";
+    throw new Error(errMsg);
+  }
+};
+
+// Set user details (name, contact, email)
+export const addUser = async (userId, name, contact, email) => {
+  try {
+    const response = await apiClient.post("/userprofile/details", {
+      user_id: userId,
+      name,
+      contact,
+      email,
+    });
+    return response.data.message;
+  } catch (error) {
+    const errMsg =
+      error.response?.data?.error ||
+      error.response?.data?.detail ||
+      "Failed to add user details. Please try again.";
+    throw new Error(errMsg);
   }
 };

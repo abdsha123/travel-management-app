@@ -5,7 +5,7 @@ from app.services.seathashmap_service import (
     is_seat_available,
     update_seat_availability,
     get_seat_info,
-    print_all_seats,
+    get_all_seats,
 )
 
 router = APIRouter()
@@ -22,7 +22,9 @@ class UpdateSeatAvailabilityRequest(BaseModel):
 @router.post("/add")
 async def add_seat_endpoint(request: AddSeatRequest):
     result = await add_seat(request.seat_id, request.is_available, request.seat_type)
-    return {"success": result["success"], "message": "Seat added successfully"}
+    if result.get("error"):
+        return {"success": False, "error": result["error"]}
+    return {"success": True, "message": "Seat added successfully"}
 
 @router.get("/available")
 async def available(seat_id: int):
@@ -41,5 +43,5 @@ async def info(seat_id: int):
 
 @router.get("/all")
 async def all_seats():
-    result = await print_all_seats()
+    result = await get_all_seats()
     return result

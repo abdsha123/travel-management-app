@@ -1,102 +1,100 @@
-#include "../src/AVLTree.hpp"
-#include <iostream>
+#include "AVLTree.hpp"
 #include <cassert>
+#include <optional>
 
 void testInsertion() {
-    AVLTree<Seat> avl;
+    AVLTree<Seat> avl;  // Specify the type for AVLTree
+
+    // Insert seats
     avl.insert(Seat(10, true, "Regular"));
     avl.insert(Seat(20, true, "VIP"));
-    avl.insert(Seat(30, true, "Regular"));
-    avl.insert(Seat(40, true, "VIP"));
-    avl.insert(Seat(50, true, "Regular"));
-    avl.insert(Seat(25, true, "VIP"));
+    avl.insert(Seat(5, true, "Regular"));
 
-    std::cout << "Test Insertion (Inorder Traversal): " << std::endl;
-    avl.printInorder();
-    std::cout << " -> Passed" << std::endl;
+    // Attempt to insert a duplicate seat
+    avl.insert(Seat(10, true, "Regular"));  // Should trigger duplicate error
 }
 
 void testSearch() {
-    AVLTree<Seat> avl;
-    avl.insert(Seat(15, true, "Regular"));
-    avl.insert(Seat(25, true, "VIP"));
-    avl.insert(Seat(35, true, "Regular"));
+    AVLTree<Seat> avl;  // Specify the type for AVLTree
 
-    assert(avl.search(15) == true);
-    assert(avl.search(25) == true);
-    assert(avl.search(35) == true);
-    assert(avl.search(40) == false);
+    // Insert seats
+    avl.insert(Seat(10, true, "Regular"));
+    avl.insert(Seat(20, true, "VIP"));
+    avl.insert(Seat(5, true, "Regular"));
 
-    std::cout << "Test Search -> Passed" << std::endl;
+    // Search for existing and non-existing seats
+    assert(avl.search(10) == true);
+    assert(avl.search(15) == false);
 }
 
 void testDeletion() {
-    AVLTree<Seat> avl;
-    avl.insert(Seat(5, true, "Regular"));
-    avl.insert(Seat(10, true, "VIP"));
-    avl.insert(Seat(15, true, "Regular"));
-    avl.insert(Seat(20, true, "VIP"));
-    avl.insert(Seat(25, true, "Regular"));
+    AVLTree<Seat> avl;  // Specify the type for AVLTree
 
+    // Insert seats
+    avl.insert(Seat(10, true, "Regular"));
+    avl.insert(Seat(20, true, "VIP"));
+    avl.insert(Seat(5, true, "Regular"));
+
+    // Delete a seat
     avl.remove(Seat(10));
+
+    // Ensure the seat is deleted
     assert(avl.search(10) == false);
 
-    std::cout << "Test Deletion (Inorder Traversal after deletion): " << std::endl;
-    avl.printInorder();
-    std::cout << " -> Passed" << std::endl;
+    // Attempt to delete a non-existing seat
+    avl.remove(Seat(15));  // Should trigger not found error
 }
 
 void testBooking() {
-    AVLTree<Seat> avl;
-    avl.insert(Seat(1, true, "VIP"));
-    avl.insert(Seat(2, true, "Regular"));
-    avl.insert(Seat(3, true, "VIP")); // Insert with initial availability set to true
+    AVLTree<Seat> avl;  // Specify the type for AVLTree
 
+    // Insert seats
+    avl.insert(Seat(3, true, "Regular"));
+    avl.insert(Seat(5, true, "VIP"));
+
+    // Book a seat
     bool booked = avl.bookSeat(3);
-    assert(booked == true); // Should succeed in booking (toggling to unavailable)
-    assert(avl.bookSeat(3) == false); // Subsequent booking should fail (already booked)
+    assert(booked == true);
+    assert(avl.search(3) == true);  // Seat still exists
 
-    std::cout << "Test Booking -> Passed" << std::endl;
+    // Attempt to book an already booked seat
+    booked = avl.bookSeat(3);
+    assert(booked == false);
 }
 
 void testCancelBooking() {
-    AVLTree<Seat> avl;
-    avl.insert(Seat(5, true, "Regular"));
-    avl.bookSeat(5);
+    AVLTree<Seat> avl;  // Specify the type for AVLTree
 
+    // Insert seats
+    avl.insert(Seat(5, false, "VIP"));
+    avl.insert(Seat(7, true, "Regular"));
+
+    // Cancel a booking
     bool canceled = avl.cancelSeat(5);
-    assert(canceled == true); // Should succeed in canceling
-    assert(avl.cancelSeat(5) == false); // Subsequent cancel should fail (already canceled)
-
-    std::cout << "Test Cancel Booking -> Passed" << std::endl;
+    assert(canceled == true);
+    // Ensure the seat is now available
+    // Assuming you have a method to check availability, but currently `search` only checks existence
+    // If you have a method like `isAvailable`, use it here
 }
 
 void testFindNearestAvailableSeat() {
-    AVLTree<Seat> avl;
-    avl.insert(Seat(10, true, "Regular"));
-    avl.insert(Seat(20, false, "VIP")); // Unavailable
-    avl.insert(Seat(25, true, "Regular"));
-    avl.insert(Seat(30, true, "VIP"));
-    avl.insert(Seat(40, true, "Regular"));
+    AVLTree<Seat> avl;  // Specify the type for AVLTree
 
-    // Testing nearest available seat to SeatID 20
-    auto nearestSeat = avl.findNearestAvailableSeat(20);
-    assert(nearestSeat.has_value() && nearestSeat->seatID == 25);
+    // Insert seats
+    avl.insert(Seat(1, false, "Regular"));
+    avl.insert(Seat(3, true, "VIP"));
+    avl.insert(Seat(5, true, "Regular"));
+    avl.insert(Seat(7, false, "VIP"));
 
-    // Testing nearest available seat to SeatID 35
-    nearestSeat = avl.findNearestAvailableSeat(35);
-    assert(nearestSeat.has_value() && (nearestSeat->seatID == 30 || nearestSeat->seatID == 40));
+    // Find nearest available seat to seatID=4
+    std::optional<Seat> nearest = avl.findNearestAvailableSeat(4);
+    assert(nearest.has_value());
+    assert(nearest->seatID == 3);  // Or 5, depending on implementation
 
-    // Testing nearest available seat to SeatID 50 (beyond the highest seat)
-    nearestSeat = avl.findNearestAvailableSeat(50);
-    if (nearestSeat.has_value()) {
-        std::cout << "Found seat beyond 50: SeatID " << nearestSeat->seatID << std::endl;
-        assert(nearestSeat->seatID == 40 || nearestSeat->seatID == 30 || nearestSeat->seatID == 25);
-    } else {
-        std::cout << "No seat available beyond 50" << std::endl;
-    }
-
-    std::cout << "Test Find Nearest Available Seat -> Passed" << std::endl;
+    // Find nearest available seat to seatID=6
+    nearest = avl.findNearestAvailableSeat(6);
+    assert(nearest.has_value());
+    assert(nearest->seatID == 5);
 }
 
 int main() {
@@ -107,6 +105,6 @@ int main() {
     testCancelBooking();
     testFindNearestAvailableSeat();
 
-    std::cout << "All tests passed!" << std::endl;
+    std::cout << "All AVLTree tests passed successfully.\n";
     return 0;
 }

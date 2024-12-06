@@ -1,3 +1,4 @@
+// PriorityQueue.hpp
 #ifndef PRIORITYQUEUE_HPP
 #define PRIORITYQUEUE_HPP
 
@@ -6,6 +7,7 @@
 #include <iostream>
 #include <chrono>
 #include <functional>
+#include <stdexcept>
 
 // Structure for storing booking requests with priority
 struct BookingRequest {
@@ -35,7 +37,14 @@ private:
 public:
     // Adds a booking request to the priority queue
     void addRequest(int seatID, int priority) {
+        if (seatID <= 0 || priority < 0) {
+            std::cerr << "Invalid booking request parameters: seatID=" << seatID
+                      << ", priority=" << priority << std::endl;
+            return;
+        }
         queue.push(BookingRequest(seatID, priority));
+        std::cout << "Added request for seatID=" << seatID
+                  << " with priority=" << priority << std::endl;
     }
 
     // Processes the highest-priority request in the queue
@@ -70,7 +79,7 @@ public:
     // Prints all requests in the queue
     void printAllRequests() const {
         forEachRequest([](const BookingRequest& request) {
-            std::cout << "SeatID: " << request.seatID
+            std::cout << "  SeatID: " << request.seatID
                       << ", Priority: " << request.priority
                       << ", Timestamp: "
                       << std::chrono::duration_cast<std::chrono::milliseconds>(

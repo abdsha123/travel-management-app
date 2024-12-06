@@ -25,11 +25,13 @@ PYBIND11_MODULE(cpp_backend, m) {
         .def("bookSeat", &AVLTree<Seat>::bookSeat)
         .def("cancelSeat", &AVLTree<Seat>::cancelSeat)
         .def("findNearestAvailableSeat", &AVLTree<Seat>::findNearestAvailableSeat)
-        .def("printInorder", &AVLTree<Seat>::printInorder);
+        .def("printInorder", &AVLTree<Seat>::printInorder)
+        // Explicitly cast the search function pointer
+        .def("search", (bool (AVLTree<Seat>::*)(int) const) &AVLTree<Seat>::search);
 
     // BookingRequest class
     py::class_<BookingRequest>(m, "BookingRequest")
-        .def(py::init<int, int>())  // Constructor for BookingRequest
+        .def(py::init<int, int>())
         .def_readwrite("seatID", &BookingRequest::seatID)
         .def_readwrite("priority", &BookingRequest::priority);
 
@@ -39,7 +41,8 @@ PYBIND11_MODULE(cpp_backend, m) {
         .def("addRequest", &PriorityQueue::addRequest)
         .def("processRequest", &PriorityQueue::processRequest)
         .def("isEmpty", &PriorityQueue::isEmpty)
-        .def("getRequestCount", &PriorityQueue::getRequestCount);
+        .def("getRequestCount", &PriorityQueue::getRequestCount)
+        .def("printAllRequests", &PriorityQueue::printAllRequests);
 
     // Graph class
     py::class_<Graph::Edge>(m, "Edge")
@@ -67,7 +70,8 @@ PYBIND11_MODULE(cpp_backend, m) {
         .def("isSeatAvailable", &SeatHashMap::isSeatAvailable)
         .def("updateSeatAvailability", &SeatHashMap::updateSeatAvailability)
         .def("getSeatInfo", &SeatHashMap::getSeatInfo)
-        .def("printAllSeats", &SeatHashMap::printAllSeats);
+        .def("printAllSeats", &SeatHashMap::printAllSeats)
+        .def("getAllSeats", &SeatHashMap::getAllSeats);
 
     // BookingRecord class
     py::class_<BookingRecord>(m, "BookingRecord")
@@ -81,8 +85,16 @@ PYBIND11_MODULE(cpp_backend, m) {
                    "', seatType='" + record.seatType + "'>";
         });
 
+    // UserProfile and UserProfileManager
+    py::class_<UserProfile>(m, "UserProfile")
+        .def_readwrite("name", &UserProfile::name)
+        .def_readwrite("contact", &UserProfile::contact)
+        .def_readwrite("email", &UserProfile::email)
+        .def_readwrite("bookings", &UserProfile::bookings);
+
     py::class_<UserProfileManager>(m, "UserProfileManager")
         .def(py::init<>())
+        .def("setUserDetails", &UserProfileManager::setUserDetails)
         .def("addBooking", &UserProfileManager::addBooking)
         .def("getBookingHistory", &UserProfileManager::getBookingHistory)
         .def("hasBookings", &UserProfileManager::hasBookings);

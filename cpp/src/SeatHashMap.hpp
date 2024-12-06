@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <functional>
+#include <vector>
 
 struct SeatInfo {
     int seatID = 0;
@@ -22,6 +23,9 @@ private:
 
 public:
     void addSeat(int seatID, bool isAvailable, const std::string& seatType) {
+        if (seatMap.find(seatID) != seatMap.end()) {
+            std::cerr << "Seat already exists.\n";
+        }
         seatMap[seatID] = SeatInfo(seatID, isAvailable, seatType);
     }
 
@@ -62,6 +66,15 @@ public:
                       << ", Available: " << seat.isAvailable
                       << ", Type: " << seat.seatType << std::endl;
         });
+    }
+
+    std::vector<SeatInfo> getAllSeats() const {
+        std::vector<SeatInfo> seats;
+        seats.reserve(seatMap.size());
+        for (const auto& pair : seatMap) {
+            seats.push_back(pair.second);
+        }
+        return seats;
     }
 };
 
