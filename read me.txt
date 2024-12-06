@@ -4,6 +4,8 @@ navigate to the backend folder
 in backend folder open terminal and install packages type pip install fastapi uvicorn pydantic
 
 set path using the command $env:PYTHONPATH="<path to build folder>;$env:PYTHONPATH"
+for e.g $env:PYTHONPATH="C:\Users\abdul\Downloads\travel management app\cpp\build;$env:PYTHONPATH"
+
 next, launch the backend server using the following command while in the backend folder:
 uvicorn app.main:app --reload
 
