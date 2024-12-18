@@ -19,9 +19,10 @@ async def add_route(city1: str, city2: str, weight: int):
 async def find_shortest_path(start_city: str, end_city: str):
     async with lock:
         result = graph.findShortestPath(start_city, end_city)
-    if result.first == -1:
+    if result[0] == -1:  # Access the first element of the tuple
         return {"success": False, "error": "No path found"}
-    return {"success": True, "path": result.second, "cost": result.first}
+    return {"success": True, "path": result[1], "cost": result[0]}  # Access the second element of the tuple
+
 
 async def print_graph():
     async with lock:
