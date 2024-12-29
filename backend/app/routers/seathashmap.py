@@ -1,22 +1,23 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 from app.services.seathashmap_service import (
-    add_seat,
+   
     is_seat_available,
     update_seat_availability,
-    get_seat_info,
     get_all_seats,
+    add_seat,
+    get_seat_info,
 )
 
 router = APIRouter()
 
+class UpdateSeatAvailabilityRequest(BaseModel):
+    is_available: bool
+    seat_id: int
+
 class AddSeatRequest(BaseModel):
     seat_id: int
-    is_available: bool
     seat_type: str
-
-class UpdateSeatAvailabilityRequest(BaseModel):
-    seat_id: int
     is_available: bool
 
 @router.post("/add")
@@ -31,16 +32,17 @@ async def available(seat_id: int):
     result = await is_seat_available(seat_id)
     return result
 
-@router.put("/update")
-async def update_seat_endpoint(request: UpdateSeatAvailabilityRequest):
-    result = await update_seat_availability(request.seat_id, request.is_available)
-    return result
 
 @router.get("/info")
 async def info(seat_id: int):
     result = await get_seat_info(seat_id)
     return result
 
+@router.put("/update")
+async def update_seat_endpoint(request: UpdateSeatAvailabilityRequest):
+    result = await update_seat_availability(request.seat_id, request.is_available)
+    return result
+    
 @router.get("/all")
 async def all_seats():
     result = await get_all_seats()
