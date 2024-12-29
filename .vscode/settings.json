@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "C:/Users/abdul/Downloads/travel management app/cpp"
+    "cmake.sourceDirectory": "C:/Users/abdul/Downloads/travel management app/cpp",
+    "files.associations": {
+        "filesystem": "cpp"
+    }
 }
