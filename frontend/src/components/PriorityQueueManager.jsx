@@ -21,17 +21,19 @@ const PriorityQueueManager = () => {
         setMessage("Please provide both Seat ID and Priority.");
         return;
       }
-      const resultMessage = await addRequest(
-        parseInt(seatId),
-        parseInt(priority),
-      );
-      setMessage(resultMessage);
-      setSeatId("");
-      setPriority("");
+      const response = await addRequest(parseInt(seatId), parseInt(priority));
+      if (response.success) {
+        setMessage(response.message); // Success message
+        setSeatId("");
+        setPriority("");
+      } else {
+        setMessage(response.error); // Error message
+      }
     } catch (error) {
-      setMessage(error.message);
+      setMessage(`Error: ${error.message}`);
     }
   };
+  
 
   const handleProcessRequest = async () => {
     try {
@@ -72,14 +74,19 @@ const PriorityQueueManager = () => {
   const handleGetAllRequests = async () => {
     try {
       const requests = await getAllRequests();
-      setAllRequests(requests);
-      setMessage("");
+      console.log("Backend Response (All Requests):", requests); // Debugging log
+      setAllRequests(requests.requests || []); // Update state with requests
+      setMessage(""); // Clear any previous messages
     } catch (error) {
+      console.error("Error in handleGetAllRequests:", error); // Debugging log
       setMessage(error.message);
     }
   };
+  
 
   return (
+
+    
     <div className="container my-4">
       <div className="card shadow-sm p-4 bg-light">
         <h2 className="card-title text-center text-primary">
@@ -167,6 +174,7 @@ const PriorityQueueManager = () => {
                 </ul>
               </div>
             )}
+
           </div>
         </div>
       </div>

@@ -23,12 +23,7 @@ const UserProfileManager = () => {
   const [userEmail, setUserEmail] = useState("");
 
   const handleAddBooking = async () => {
-    if (
-      !userId ||
-      !booking.seatId ||
-      !booking.travelDate ||
-      !booking.seatType
-    ) {
+    if (!userId || !booking.seatId || !booking.travelDate || !booking.seatType) {
       setMessage("Please fill out all booking details.");
       return;
     }
@@ -37,14 +32,19 @@ const UserProfileManager = () => {
         parseInt(userId),
         parseInt(booking.seatId),
         booking.travelDate,
-        booking.seatType,
+        booking.seatType
       );
-      setMessage(result.message || "Booking added successfully!");
-      setBooking({ seatId: "", travelDate: "", seatType: "" });
+      if (result.success) {
+        setMessage(result.message || "Booking added successfully!");
+        setBooking({ seatId: "", travelDate: "", seatType: "" });
+      } else {
+        setMessage(result.error || "Error adding booking.");
+      }
     } catch (error) {
       setMessage(`Error adding booking: ${error.message}`);
     }
   };
+  
 
   const handleGetBookingHistory = async () => {
     if (!userId) {
@@ -159,41 +159,42 @@ const UserProfileManager = () => {
           </div>
 
           <h5>Booking Details</h5>
-          <div className="mb-4">
-            <input
-              type="number"
-              placeholder="Seat ID"
-              value={booking.seatId}
-              onChange={(e) =>
-                setBooking({ ...booking, seatId: e.target.value })
-              }
-              className="form-control mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Travel Date"
-              value={booking.travelDate}
-              onChange={(e) =>
-                setBooking({ ...booking, travelDate: e.target.value })
-              }
-              className="form-control mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Seat Type"
-              value={booking.seatType}
-              onChange={(e) =>
-                setBooking({ ...booking, seatType: e.target.value })
-              }
-              className="form-control mb-2"
-            />
-            <button
-              onClick={handleAddBooking}
-              className="btn btn-primary w-100"
-            >
-              Add Booking
-            </button>
-          </div>
+                  <div className="mb-4">
+          <input
+            type="number"
+            placeholder="Seat ID"
+            value={booking.seatId}
+            onChange={(e) =>
+              setBooking({ ...booking, seatId: e.target.value })
+            }
+            className="form-control mb-2"
+          />
+          <input
+            type="date" // Restrict input to dates
+            placeholder="Travel Date"
+            value={booking.travelDate}
+            onChange={(e) =>
+              setBooking({ ...booking, travelDate: e.target.value })
+            }
+            className="form-control mb-2"
+          />
+          <input
+            type="text"
+            placeholder="Seat Type"
+            value={booking.seatType}
+            onChange={(e) =>
+              setBooking({ ...booking, seatType: e.target.value })
+            }
+            className="form-control mb-2"
+          />
+          <button
+            onClick={handleAddBooking}
+            className="btn btn-primary w-100"
+          >
+            Add Booking
+          </button>
+        </div>
+
           <div className="d-flex gap-2 mb-4">
             <button
               onClick={handleGetBookingHistory}

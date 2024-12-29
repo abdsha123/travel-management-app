@@ -17,7 +17,8 @@ class AddRequest(BaseModel):
 @router.post("/add")
 async def add(request: AddRequest):
     result = await add_request(request.seat_id, request.priority)
-    return {"success": True, "message": "Request added successfully!", "result": result}
+    # Return the result directly as it already contains success and message fields
+    return result
 
 @router.post("/process")
 async def process():

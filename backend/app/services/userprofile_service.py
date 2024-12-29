@@ -13,10 +13,23 @@ async def set_user_details(user_id: int, name: str, contact: str, email: str):
 async def add_booking(user_id: int, seat_id: int, travel_date: str, seat_type: str):
     async with lock:
         try:
+            # Fetch existing bookings for the user
+            history = user_profile_manager.getBookingHistory(user_id)
+
+            # Check for duplicate booking
+            for booking in history:
+                if booking.seatID == seat_id and booking.travelDate == travel_date:
+                    return {
+                        "success": False,
+                        "error": f"Booking already exists for seat {seat_id} on {travel_date}."
+                    }
+
+            # Add booking if no duplicates are found
             user_profile_manager.addBooking(user_id, seat_id, travel_date, seat_type)
             return {"success": True, "message": "Booking added successfully"}
         except Exception as e:
             return {"success": False, "error": str(e)}
+
 
 async def get_booking_history(user_id: int):
     async with lock:

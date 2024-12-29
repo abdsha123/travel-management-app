@@ -21,6 +21,7 @@ async def add_request(seat_id: int, priority: int):
 
     return {"success": True, "message": f"Request for seat ID {seat_id} added successfully"}
 
+
 async def process_request():
     async with lock:
         if priority_queue.isEmpty():
