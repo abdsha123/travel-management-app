@@ -1,3 +1,4 @@
+// importing libraries
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import AVLTreeManager from "./components/AVLTreeManager";
@@ -6,7 +7,7 @@ import GraphManager from "./components/GraphManager";
 import SeatHashMapManager from "./components/SeatHashMapManager";
 import UserProfileManager from "./components/UserProfileManager";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+// function that render html on browser. 
 const App = () => {
   return (
     <Router>
@@ -44,5 +45,5 @@ const App = () => {
     </Router>
   );
 };
-
+//  making that file accessible. 
 export default App;

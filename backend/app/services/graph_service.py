@@ -1,4 +1,4 @@
-# graph_service.py
+
 from cpp_backend import Graph
 import asyncio
 
