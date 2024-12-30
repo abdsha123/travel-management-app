@@ -17,10 +17,27 @@ const PriorityQueueManager = () => {
 
   const handleAddRequest = async () => {
     try {
-      if (!seatId || !priority) {
-        setMessage("Please provide both Seat ID and Priority.");
+      // Validate that Seat ID and Priority are provided
+      if (!seatId || seatId.trim() === "") {
+        setMessage("Please provide a valid Seat ID.");
         return;
       }
+      if (!priority || priority.trim() === "") {
+        setMessage("Please provide a valid Priority.");
+        return;
+      }
+  
+      // Validate that Seat ID and Priority are non-negative
+      if (parseInt(seatId) < 0) {
+        setMessage("Seat ID must be a non-negative number.");
+        return;
+      }
+      if (parseInt(priority) < 0) {
+        setMessage("Priority must be a non-negative number.");
+        return;
+      }
+  
+      // Call the addRequest function
       const response = await addRequest(parseInt(seatId), parseInt(priority));
       if (response.success) {
         setMessage(response.message); // Success message

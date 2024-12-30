@@ -11,7 +11,7 @@ const UserProfileManager = () => {
   const [booking, setBooking] = useState({
     seatId: "",
     travelDate: "",
-    seatType: "",
+    seatType: "economy", // Default seat type
   });
   const [bookingHistory, setBookingHistory] = useState([]);
   const [hasBooking, setHasBooking] = useState(false);
@@ -36,7 +36,7 @@ const UserProfileManager = () => {
       );
       if (result.success) {
         setMessage(result.message || "Booking added successfully!");
-        setBooking({ seatId: "", travelDate: "", seatType: "" });
+        setBooking({ seatId: "", travelDate: "", seatType: "economy" });
       } else {
         setMessage(result.error || "Error adding booking.");
       }
@@ -44,7 +44,6 @@ const UserProfileManager = () => {
       setMessage(`Error adding booking: ${error.message}`);
     }
   };
-  
 
   const handleGetBookingHistory = async () => {
     if (!userId) {
@@ -75,7 +74,7 @@ const UserProfileManager = () => {
       if (result.success) {
         setHasBooking(result.hasBookings);
         setMessage(
-          result.hasBookings ? "User has bookings!" : "No bookings found.",
+          result.hasBookings ? "User has bookings!" : "No bookings found."
         );
       } else {
         setMessage(result.error || "Error checking bookings.");
@@ -95,7 +94,7 @@ const UserProfileManager = () => {
         parseInt(userId),
         userName,
         userContact,
-        userEmail,
+        userEmail
       );
       setMessage(msg);
     } catch (error) {
@@ -159,41 +158,80 @@ const UserProfileManager = () => {
           </div>
 
           <h5>Booking Details</h5>
-                  <div className="mb-4">
-          <input
-            type="number"
-            placeholder="Seat ID"
-            value={booking.seatId}
-            onChange={(e) =>
-              setBooking({ ...booking, seatId: e.target.value })
-            }
-            className="form-control mb-2"
-          />
-          <input
-            type="date" // Restrict input to dates
-            placeholder="Travel Date"
-            value={booking.travelDate}
-            onChange={(e) =>
-              setBooking({ ...booking, travelDate: e.target.value })
-            }
-            className="form-control mb-2"
-          />
-          <input
-            type="text"
-            placeholder="Seat Type"
-            value={booking.seatType}
-            onChange={(e) =>
-              setBooking({ ...booking, seatType: e.target.value })
-            }
-            className="form-control mb-2"
-          />
-          <button
-            onClick={handleAddBooking}
-            className="btn btn-primary w-100"
-          >
-            Add Booking
-          </button>
-        </div>
+          <div className="mb-4">
+            <input
+              type="number"
+              placeholder="Seat ID"
+              value={booking.seatId}
+              onChange={(e) =>
+                setBooking({ ...booking, seatId: e.target.value })
+              }
+              className="form-control mb-2"
+            />
+            <input
+              type="date"
+              placeholder="Travel Date"
+              value={booking.travelDate}
+              onChange={(e) =>
+                setBooking({ ...booking, travelDate: e.target.value })
+              }
+              className="form-control mb-2"
+            />
+            <div className="mb-2">
+              <label className="form-label">Seat Type:</label>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  id="economy"
+                  value="economy"
+                  checked={booking.seatType === "economy"}
+                  onChange={(e) =>
+                    setBooking({ ...booking, seatType: e.target.value })
+                  }
+                />
+                <label className="form-check-label" htmlFor="economy">
+                  Economy
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  id="regular"
+                  value="regular"
+                  checked={booking.seatType === "regular"}
+                  onChange={(e) =>
+                    setBooking({ ...booking, seatType: e.target.value })
+                  }
+                />
+                <label className="form-check-label" htmlFor="regular">
+                  Regular
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  id="vip"
+                  value="vip"
+                  checked={booking.seatType === "vip"}
+                  onChange={(e) =>
+                    setBooking({ ...booking, seatType: e.target.value })
+                  }
+                />
+                <label className="form-check-label" htmlFor="vip">
+                  VIP
+                </label>
+              </div>
+            </div>
+            <button
+              onClick={handleAddBooking}
+              className="btn btn-primary w-100"
+            >
+              Add Booking
+            </button>
+          </div>
 
           <div className="d-flex gap-2 mb-4">
             <button

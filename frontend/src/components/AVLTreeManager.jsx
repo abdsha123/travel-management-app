@@ -9,38 +9,41 @@ import {
 const AVLTreeManager = () => {
   const [seatId, setSeatId] = useState("");
   const [isAvailable, setIsAvailable] = useState("true");
-  const [seatType, setSeatType] = useState("");
+  const [seatType, setSeatType] = useState("economy");
   const [nearestSeat, setNearestSeat] = useState(null);
   const [message, setMessage] = useState("");
 
   const handleInsertSeat = async () => {
-    if (!seatId || !seatType) {
-      setMessage("Please provide both Seat ID and Seat Type.");
+    // Validate Seat ID and Seat Type
+    if (!seatId || parseInt(seatId) < 0) {  // Check for non-negative Seat ID
+      setMessage("Seat ID must be a non-negative number.");
       return;
     }
+    if (!seatType) {
+      setMessage("Please select a Seat Type.");
+      return;
+    }
+    
     try {
       const result = await insertSeat(
         parseInt(seatId),
         isAvailable === "true",
-        seatType,
+        seatType
       );
-      // Now handle it like the SeatHashMap logic:
       if (result.error) {
-        // Backend returned success: false, error: "Seat already exists"
         setMessage(result.error);
       } else {
-        // Backend returned success: true, message: "Seat inserted successfully!"
         setMessage(result.message);
       }
+      // Reset form fields
       setSeatId("");
       setIsAvailable("true");
-      setSeatType("");
+      setSeatType("economy");
     } catch (error) {
-      // If we actually hit a network error or something unexpected
       setMessage(`Error inserting seat: ${error.message}`);
     }
   };
-
+  
   const handleBookSeat = async () => {
     try {
       const result = await bookSeat(parseInt(seatId));
@@ -71,7 +74,6 @@ const AVLTreeManager = () => {
     try {
       const result = await findNearestAvailableSeat(parseInt(seatId));
       if (result.success === false && result.error) {
-        // If nearest seat was not found or some other error from backend
         setNearestSeat(null);
         setMessage(result.error);
       } else if (result?.seatID) {
@@ -125,17 +127,49 @@ const AVLTreeManager = () => {
             </select>
           </div>
           <div className="form-group mb-3">
-            <label htmlFor="seatType" className="form-label">
-              Seat Type:
-            </label>
-            <input
-              type="text"
-              id="seatType"
-              value={seatType}
-              onChange={(e) => setSeatType(e.target.value)}
-              className="form-control"
-              placeholder="Enter Seat Type (e.g., Regular, VIP)"
-            />
+            <label className="form-label">Seat Type:</label>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="economy"
+                name="seatType"
+                value="economy"
+                checked={seatType === "economy"}
+                onChange={(e) => setSeatType(e.target.value)}
+                className="form-check-input"
+              />
+              <label htmlFor="economy" className="form-check-label">
+                Economy
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="regular"
+                name="seatType"
+                value="regular"
+                checked={seatType === "regular"}
+                onChange={(e) => setSeatType(e.target.value)}
+                className="form-check-input"
+              />
+              <label htmlFor="regular" className="form-check-label">
+                Regular
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                id="vip"
+                name="seatType"
+                value="vip"
+                checked={seatType === "vip"}
+                onChange={(e) => setSeatType(e.target.value)}
+                className="form-check-input"
+              />
+              <label htmlFor="vip" className="form-check-label">
+                VIP
+              </label>
+            </div>
           </div>
           <div className="d-flex flex-wrap gap-2 justify-content-center">
             <button onClick={handleInsertSeat} className="btn btn-primary">
